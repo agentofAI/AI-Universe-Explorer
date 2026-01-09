@@ -16,6 +16,7 @@ const GraphView: React.FC<GraphViewProps> = ({ data, onNodeClick, selectedNodeId
   useEffect(() => {
     if (!svgRef.current) return;
 
+    // Use actual client dimensions to handle responsive containers better
     const width = window.innerWidth;
     const height = window.innerHeight;
 
@@ -30,45 +31,50 @@ const GraphView: React.FC<GraphViewProps> = ({ data, onNodeClick, selectedNodeId
 
     // Zoom behavior
     const zoom = d3.zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.2, 5])
+      .scaleExtent([0.1, 8])
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
       });
 
     svg.call(zoom);
 
+    // Deep clone nodes and links to prevent side effects during D3 simulation mutation
+    const nodes = data.nodes.map(d => ({ ...d }));
+    const links = data.links.map(d => ({ ...d }));
+
     // Simulation Config
-    const simulation = d3.forceSimulation<any>(data.nodes)
-      .force('link', d3.forceLink<any, any>(data.links).id(d => d.id).distance(d => {
-        const source = d.source as AINode;
-        return source.level === 0 ? 300 : 180;
+    const simulation = d3.forceSimulation<any>(nodes)
+      .force('link', d3.forceLink<any, any>(links).id(d => d.id).distance(d => {
+        const source = nodes.find(n => n.id === (d.source.id || d.source));
+        return source?.level === 0 ? 300 : 180;
       }))
-      // Use generic type <any> to allow access to custom AINode properties like 'level' in the strength accessor
-      .force('charge', d3.forceManyBody<any>().strength(d => d.level === 0 ? -2500 : -1200))
+      .force('charge', d3.forceManyBody<any>().strength(d => d.level === 0 ? -3000 : -1500))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(d => (d as AINode).level === 0 ? 100 : 60));
+      .force('collision', d3.forceCollide().radius(d => (d as AINode).level === 0 ? 120 : 80));
 
     // Links with subtle gradient/flow look
     const link = g.append('g')
       .selectAll('line')
-      .data(data.links)
+      .data(links)
       .join('line')
       .attr('stroke', '#1e293b')
-      .attr('stroke-opacity', 0.8)
+      .attr('stroke-opacity', 0.6)
       .attr('stroke-width', d => {
-        const sourceNode = data.nodes.find(n => n.id === (d.source as any).id || n.id === d.source);
+        const sourceId = typeof d.source === 'object' ? (d.source as any).id : d.source;
+        const sourceNode = nodes.find(n => n.id === sourceId);
         return sourceNode?.level === 0 ? 4 : 2;
       });
 
     // Nodes container
     const node = g.append('g')
       .selectAll('g')
-      .data(data.nodes)
+      .data(nodes)
       .join('g')
       .attr('class', 'cursor-pointer')
       .on('click', (event, d) => {
-        onNodeClick(d as AINode);
-        // Smoothly center on click
+        const originalNode = data.nodes.find(n => n.id === d.id);
+        if (originalNode) onNodeClick(originalNode);
+        
         svg.transition().duration(750).call(
           zoom.transform,
           d3.zoomIdentity.translate(width / 2, height / 2).scale(1.2).translate(-(d as any).x, -(d as any).y)
@@ -110,7 +116,6 @@ const GraphView: React.FC<GraphViewProps> = ({ data, onNodeClick, selectedNodeId
       .attr('filter', 'url(#nodeGlow)')
       .attr('opacity', d => {
         if (!selectedNodeId) return 1;
-        // Simple logic to dim non-connected nodes when one is selected
         const isRelated = d.id === selectedNodeId || (d as AINode).parent === selectedNodeId || (selectedNodeId === (d as AINode).parent);
         return isRelated ? 1 : 0.3;
       });
@@ -120,25 +125,23 @@ const GraphView: React.FC<GraphViewProps> = ({ data, onNodeClick, selectedNodeId
       .text(d => (d as AINode).label)
       .attr('dy', d => {
         const n = d as AINode;
-        if (n.level === 0) return 65;
-        if (n.level === 1) return 45;
-        return 35;
+        if (n.level === 0) return 75;
+        if (n.level === 1) return 50;
+        return 40;
       })
       .attr('text-anchor', 'middle')
       .attr('fill', '#f1f5f9')
-      .attr('font-size', d => (d as AINode).level === 0 ? '18px' : '13px')
+      .attr('font-size', d => (d as AINode).level === 0 ? '20px' : '14px')
       .attr('font-weight', d => (d as AINode).level === 0 ? '800' : '600')
-      .attr('class', 'pointer-events-none select-none drop-shadow-lg');
+      .attr('class', 'pointer-events-none select-none drop-shadow-xl');
 
     simulation.on('tick', () => {
-      // Use any casting for link updates because D3 replaces source/target string IDs with object references during simulation
       link
         .attr('x1', (d: any) => d.source.x)
         .attr('y1', (d: any) => d.source.y)
         .attr('x2', (d: any) => d.target.x)
         .attr('y2', (d: any) => d.target.y);
 
-      // Use any casting to access simulation-managed coordinates x and y
       node.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
     });
 
@@ -159,15 +162,15 @@ const GraphView: React.FC<GraphViewProps> = ({ data, onNodeClick, selectedNodeId
       event.subject.fy = null;
     }
 
-    // Centering the graph initially
-    svg.transition().duration(1000).call(zoom.transform, d3.zoomIdentity.translate(0,0).scale(0.8));
+    // Initial positioning
+    svg.call(zoom.transform, d3.zoomIdentity.translate(width/2, height/2).scale(0.6).translate(-width/2, -height/2));
 
     return () => {
       simulation.stop();
     };
   }, [data, onNodeClick, selectedNodeId]);
 
-  return <svg ref={svgRef} className="w-full h-full bg-[#020617]" />;
+  return <svg ref={svgRef} className="w-full h-full bg-[#020617] block" />;
 };
 
 export default GraphView;

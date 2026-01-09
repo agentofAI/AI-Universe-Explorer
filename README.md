@@ -1,12 +1,12 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="assets/Brain_Singularity.png" />
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# AI Universe Explorer
+# Run and deploy your AI Studio app
 
-The AI Universe Explorer is an interactive, visual journey through the complex landscape of modern artificial intelligence, mapping everything from classical logic to cutting-edge reasoning models. Featuring expert-level technical insights pre-synthesized by Gemini, this self-contained application allows you to explore key concepts, historical contexts, and future trends across the entire AI ecosystem with zero latency.
+This contains everything you need to run your app locally.
 
-Synthesized and Visualized using Gemini AI Studio.
+View your app in AI Studio: https://ai.studio/apps/drive/1n3Eh5MXb2GjsSLHBABJguyqSHPI2LNAl
 
 ## Run Locally
 
@@ -15,5 +15,6 @@ Synthesized and Visualized using Gemini AI Studio.
 
 1. Install dependencies:
    `npm install`
-2. Run the app:
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
    `npm run dev`
