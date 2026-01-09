@@ -8,6 +8,13 @@ export interface AINode {
   level: number; // 0 for root, 1 for domain, 2 for sub-domain
   parent?: string;
   details?: string;
+  // D3 simulation properties added to resolve TypeScript errors during force simulation
+  x?: number;
+  y?: number;
+  vx?: number;
+  vy?: number;
+  fx?: number | null;
+  fy?: number | null;
 }
 
 export enum NodeCategory {

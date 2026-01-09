@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AINode, NodeCategory } from '../types';
-import { getAIInsights, NodeInsights } from '../services/geminiService';
+import { getAIInsights, NodeInsights } from '../services/learnAI';
 import { CATEGORY_COLORS } from '../constants';
 
 interface InfoPanelProps {

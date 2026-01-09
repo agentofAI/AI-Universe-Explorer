@@ -16,7 +16,7 @@ const App: React.FC = () => {
       {/* Header */}
       <header className="absolute top-0 left-0 p-10 z-10 pointer-events-none">
         <h1 className="text-5xl font-black text-white tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white via-slate-300 to-slate-500">
-          NEURAL TAXONOMY
+          AI Universe Explorer
           <span className="block text-xl font-medium tracking-widest text-emerald-400 mt-2">2026 AI ECOSYSTEM MAP</span>
         </h1>
       </header>
@@ -71,8 +71,7 @@ const App: React.FC = () => {
               <span className="flex items-center"><span className="w-1.5 h-1.5 bg-slate-500 rounded-full mr-2"></span>Scroll to zoom</span>
               <span className="flex items-center"><span className="w-1.5 h-1.5 bg-slate-500 rounded-full mr-2"></span>Click to expand</span>
             </div>
-          </div>
-          <div className="text-slate-700 text-[9px] font-mono">POWERED BY GEMINI 2.5 PRO</div>
+          </div>          
         </div>
       </footer>
     </div>

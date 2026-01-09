@@ -1,5 +1,5 @@
 
-import { NodeInsights } from '../services/geminiService';
+import { NodeInsights } from '../services/learnAI';
 
 export const NODE_INSIGHTS: Record<string, NodeInsights> = {
   "Artificial Intelligence": {
