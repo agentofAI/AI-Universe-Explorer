@@ -4,7 +4,7 @@
 
 # Run and deploy your AI Studio app
 
-The AI Universe Explorer is an interactive, visual journey through the complex landscape of modern artificial intelligence, mapping everything from classical logic to cutting-edge reasoning models. Featuring expert-level technical insights pre-synthesized by Gemini, this self-contained application allows you to explore key concepts, historical contexts, and future trends across the entire AI ecosystem with zero latency.
+The AI Universe Explorer is an interactive, visual journey through the complex landscape of modern artificial intelligence, mapping everything from classical logic to cutting-edge reasoning models. Featuring expert-level technical insights pre-synthesized by Gemini, this self-contained application allows you to explore key concepts, historical contexts, and future trends across the AI ecosystem.
 
 
 ## Run Locally
